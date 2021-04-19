@@ -163,7 +163,7 @@ module Rack
               if request.params['entityID'].nil? # start ds session
                 session.start('ds')
                 return Rack::Response.new.tap { |r|
-                  r.redirect "#{@config['shib_ds']}?entityID=#{URI.encode(@config['saml_sp'], /[^\w]/)}&return=#{URI.encode("#{@config['assertion_consumer_service_uri']}?target=#{session.get_sid('ds')}", /[^\w]/)}"
+                  r.redirect "#{@config['shib_ds']}?entityID=#{CGI::escape(@config['saml_sp'], /[^\w]/)}&return=#{CGI::escape("#{@config['assertion_consumer_service_uri']}?target=#{session.get_sid('ds')}", /[^\w]/)}"
                 }.finish
               end
               if !session.is_valid?('ds', request.params['target']) # confirm ds session
